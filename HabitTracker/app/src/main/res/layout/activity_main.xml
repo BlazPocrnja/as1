@@ -9,8 +9,61 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="example.habittracker.MainActivity">
 
-    <TextView
+    <!--Source:
+    http://stackoverflow.com/questions/17693578/android-how-to-display-2-listviews-in-one-activity-one-after-the-other-->
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dip" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/incompleteHabits" />
+
+            <ListView
+                android:id="@+id/incompleteView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:background="#ea4444" >
+            </ListView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:gravity="center_vertical"
+                android:text="@string/completeHabits" />
+
+            <ListView
+                android:id="@+id/completeView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:background="#4A9C67" >
+            </ListView>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="@string/addHabit"
+        android:id="@+id/addHabitButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+
 </RelativeLayout>
