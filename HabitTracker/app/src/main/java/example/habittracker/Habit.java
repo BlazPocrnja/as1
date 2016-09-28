@@ -67,7 +67,7 @@ public class Habit {
 
     //-----------Getters----------------
     //Returns a value of specific day
-    public boolean getDays(int i){
+    public boolean getDay(int i){
         return days[i];
     }
 

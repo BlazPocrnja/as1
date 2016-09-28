@@ -1,7 +1,5 @@
 package example.habittracker;
 
-import android.os.Bundle;
-
 /**
  * Created by pocrn_000 on 9/27/2016.
  */

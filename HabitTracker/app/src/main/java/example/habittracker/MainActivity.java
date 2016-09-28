@@ -17,16 +17,32 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package example.habittracker;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
     //Adapters
     private ArrayAdapter<Habit> incompleteAdapter;
     private ArrayAdapter<Habit> completedAdapter;
+
+    //Save File
+    private static final String FILENAME = "habitFile.sav";
 
 
 
@@ -75,21 +94,23 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         incompleteAdapter = new ArrayAdapter<Habit>(this, R.layout.list_item, incompleteHabits);
-        completedAdapter = new ArrayAdapter<Habit>(this, R.layout.list_item, completedHabits);
-
         incompleteView.setAdapter(incompleteAdapter);
+
+        completedAdapter = new ArrayAdapter<Habit>(this, R.layout.list_item, completedHabits);
         completedView.setAdapter(completedAdapter);
+
+        loadFromFile();
+        updateAdapters();
     }
 
     //Source: http://www.tutorialspoint.com/android/android_alert_dialoges.htm
-    private void completedDialog(String habitName) {
+    protected void completedDialog(final String habit) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Completed?");
 
@@ -97,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 Toast.makeText(MainActivity.this,"Habit Completed!",Toast.LENGTH_LONG).show();
-                //TO DO SET HABIT COMPLETION
+                addCompletion(habit);
             }
         });
 
@@ -111,6 +132,106 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+    }
+
+    private void saveInFile() {
+        try {
+            FileOutputStream fos = openFileOutput(FILENAME, 0);
+
+            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fos));
+
+            Gson gson = new Gson();
+            gson.toJson(habits, out);
+            out.flush();
+
+            fos.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            throw new RuntimeException();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            throw new RuntimeException();
+        }
+    }
+
+    private void loadFromFile() {
+        try {
+            FileInputStream fis = openFileInput(FILENAME);
+            BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+
+            Gson gson = new Gson();
+
+            // Code from http://stackoverflow.com/questions/12384064/gson-convert-from-json-to-a-typed-arraylistt
+            Type listType = new TypeToken<ArrayList<Habit>>(){}.getType();
+
+            habits = gson.fromJson(in,listType);
+
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            habits = new ArrayList<Habit>();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            throw new RuntimeException();
+        }
+    }
+
+    private void addCompletion(String habitName) {
+        for (Habit i : habits) {
+            if (i.getName().equals(habitName)) {
+                i.addCompletion(Calendar.getInstance());
+                updateAdapters();
+                saveInFile();
+                break;
+            }
+        }
+
+    }
+
+    private void updateAdapters(){
+
+        completedHabits.clear();
+        incompleteHabits.clear();
+
+        Calendar today = Calendar.getInstance();
+        //DAY_OF_WEEK is 1-7 while mine is 0-6
+        int dayOfWeek= today.get(Calendar.DAY_OF_WEEK) - 1;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
+        if(!habits.isEmpty()) {
+            for (Habit i : habits) {
+                //If the habit is for today
+                if (i.getDay(dayOfWeek)) {
+                    //Check if has completions today or not
+                    if (i.isComplete()) {
+                        for (Calendar d : i.getCompletions()) {
+                            if (dateFormat.format(d.getTime()).equals(dateFormat.format(today.getTime()))) {
+                                completedHabits.add(i);
+                                break;
+                            }
+                        }
+
+                    } else {
+                        incompleteHabits.add(i);
+                    }
+                }
+
+            }
+        }
+
+        completedAdapter.notifyDataSetChanged();
+        incompleteAdapter.notifyDataSetChanged();
+    }
+
+    //Called when user clicks add button
+    public void addHabit(View view) {
+        Intent intent = new Intent(this, AddHabitActivity.class);
+        startActivity(intent);
+    }
+
+    //Called when user clicks see all button
+    public void allHabits(View view){
+        Intent intent = new Intent(this, AllHabitsActivity.class);
+        startActivity(intent);
     }
 
 }

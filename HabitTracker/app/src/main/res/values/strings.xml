@@ -2,9 +2,11 @@
     <string name="app_name">blaz-HabitTracker</string>
 
     <!-- Main Activity -->
+    <string name="title_main">Today</string>
     <string name="incompleteHabits">Incomplete Habits</string>
     <string name="completeHabits">Completed Habits</string>
     <string name="addHabit">Add</string>
+    <string name="see_all_habits">See All</string>
 
     <!-- Add Habit Activity -->
     <string name="title_add_habit">Add Habit</string>
@@ -21,8 +23,8 @@
     <string name="sat">Saturday</string>
 
     <!-- All Habits Activity -->
+    <string name="title_all_habits">All Habits</string>
     <string name="action_all_habits">View All Habits</string>
-
 
 
 </resources>
