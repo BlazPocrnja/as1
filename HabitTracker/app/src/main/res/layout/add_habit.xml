@@ -38,49 +38,50 @@
                 android:singleLine="true"
                 android:layout_marginTop="30dp"/>
 
-            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="15dp">
+                android:gravity="center_vertical"
+                android:text="@string/habitDays"
+                android:layout_marginTop="15dp"/>
 
-                <RadioButton android:id="@+id/radio_sun"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sun"
-                    android:onClick="onRadioButtonClicked"/>
-                <RadioButton android:id="@+id/radio_mon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mon"
-                    android:onClick="onRadioButtonClicked"/>
-                <RadioButton android:id="@+id/radio_tues"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tues"
-                    android:onClick="onRadioButtonClicked"/>
-                <RadioButton android:id="@+id/radio_wed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/wed"
-                    android:onClick="onRadioButtonClicked"/>
-                <RadioButton android:id="@+id/radio_thurs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/thurs"
-                    android:onClick="onRadioButtonClicked"/>
-                <RadioButton android:id="@+id/radio_fri"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/fri"
-                    android:onClick="onRadioButtonClicked"/>
-                <RadioButton android:id="@+id/radio_sat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sat"
-                    android:onClick="onRadioButtonClicked"/>
 
-            </RadioGroup>
+            <CheckBox android:id="@+id/check_sun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sun"
+                android:onClick="onCheckBoxClicked"/>
+            <CheckBox android:id="@+id/check_mon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mon"
+                android:onClick="onCheckBoxClicked"/>
+            <CheckBox android:id="@+id/check_tues"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tues"
+                android:onClick="onCheckBoxClicked"/>
+            <CheckBox android:id="@+id/check_wed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wed"
+                android:onClick="onCheckBoxClicked"/>
+            <CheckBox android:id="@+id/check_thurs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/thurs"
+                android:onClick="onCheckBoxClicked"/>
+            <CheckBox android:id="@+id/check_fri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/fri"
+                android:onClick="onCheckBoxClicked"/>
+            <CheckBox android:id="@+id/check_sat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sat"
+                android:onClick="onCheckBoxClicked"/>
+
 
 
         </LinearLayout>
@@ -91,7 +92,8 @@
         android:text="@string/save"
         android:id="@+id/button"
         android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="saveHabit"/>
 
 
 </RelativeLayout>

@@ -22,24 +22,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.MeasureSpec;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -99,14 +89,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        //Load in data from file
+        FileRetriever retriever = new FileRetriever(this);
+        habits = retriever.loadFromFile(FILENAME);
+        updateArrays();
+
         incompleteAdapter = new ArrayAdapter<Habit>(this, R.layout.list_item, incompleteHabits);
         incompleteView.setAdapter(incompleteAdapter);
 
         completedAdapter = new ArrayAdapter<Habit>(this, R.layout.list_item, completedHabits);
         completedView.setAdapter(completedAdapter);
 
-        loadFromFile();
-        updateAdapters();
+        ListUtils.setDynamicHeight(completedView);
+        ListUtils.setDynamicHeight(incompleteView);
+
+
     }
 
     //Source: http://www.tutorialspoint.com/android/android_alert_dialoges.htm
@@ -125,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("No",new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
             }
         });
 
@@ -134,60 +131,22 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void saveInFile() {
-        try {
-            FileOutputStream fos = openFileOutput(FILENAME, 0);
-
-            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(fos));
-
-            Gson gson = new Gson();
-            gson.toJson(habits, out);
-            out.flush();
-
-            fos.close();
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            throw new RuntimeException();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            throw new RuntimeException();
-        }
-    }
-
-    private void loadFromFile() {
-        try {
-            FileInputStream fis = openFileInput(FILENAME);
-            BufferedReader in = new BufferedReader(new InputStreamReader(fis));
-
-            Gson gson = new Gson();
-
-            // Code from http://stackoverflow.com/questions/12384064/gson-convert-from-json-to-a-typed-arraylistt
-            Type listType = new TypeToken<ArrayList<Habit>>(){}.getType();
-
-            habits = gson.fromJson(in,listType);
-
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            habits = new ArrayList<Habit>();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            throw new RuntimeException();
-        }
-    }
-
     private void addCompletion(String habitName) {
         for (Habit i : habits) {
             if (i.getName().equals(habitName)) {
                 i.addCompletion(Calendar.getInstance());
-                updateAdapters();
-                saveInFile();
+                updateArrays();
+                completedAdapter.notifyDataSetChanged();
+                incompleteAdapter.notifyDataSetChanged();
+                FileRetriever retriever = new FileRetriever(this);
+                retriever.saveInFile(habits,FILENAME);
                 break;
             }
         }
 
     }
 
-    private void updateAdapters(){
+    private void updateArrays(){
 
         completedHabits.clear();
         incompleteHabits.clear();
@@ -218,8 +177,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        completedAdapter.notifyDataSetChanged();
-        incompleteAdapter.notifyDataSetChanged();
     }
 
     //Called when user clicks add button
@@ -234,4 +191,40 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        habits.clear();
+        FileRetriever retriever = new FileRetriever(this);
+        habits = retriever.loadFromFile(FILENAME);
+        updateArrays();
+        completedAdapter.notifyDataSetChanged();
+        incompleteAdapter.notifyDataSetChanged();
+
+    }
+
+    //Source:http://stackoverflow.com/questions/17693578/android-how-to-display-2-listviews-in-one-activity-one-after-the-other
+    public static class ListUtils {
+        public static void setDynamicHeight(ListView mListView) {
+            ListAdapter mListAdapter = mListView.getAdapter();
+            if (mListAdapter == null) {
+                // when adapter is null
+                return;
+            }
+            int height = 0;
+            int desiredWidth = MeasureSpec.makeMeasureSpec(mListView.getWidth(), MeasureSpec.UNSPECIFIED);
+            for (int i = 0; i < mListAdapter.getCount(); i++) {
+                View listItem = mListAdapter.getView(i, null, mListView);
+                listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
+                height += listItem.getMeasuredHeight();
+            }
+            ViewGroup.LayoutParams params = mListView.getLayoutParams();
+            params.height = height + (mListView.getDividerHeight() * (mListAdapter.getCount() - 1));
+            mListView.setLayoutParams(params);
+            mListView.requestLayout();
+        }
+    }
+
 }
+
+

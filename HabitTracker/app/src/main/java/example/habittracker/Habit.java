@@ -1,7 +1,11 @@
 package example.habittracker;
 
+import java.security.SecureRandom;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+
 
 /**
  * Created by pocrn_000 on 9/26/2016.
@@ -20,13 +24,26 @@ public class Habit {
     //Array of dates when this habit was completed
     private ArrayList<Calendar> completions;
 
+    //Max length of name
+    private static final int MAX_LENGTH = 34;
+
 
     //--------Constructors-----------
+    public Habit(){
+        SecureRandom random = new SecureRandom();
+        this.name = new BigInteger(130, random).toString(32);
+        this.date = Calendar.getInstance();
+        this.completions = new ArrayList<Calendar>();
+        this.days = new boolean[7];
+        Arrays.fill(this.days,false);
+    }
+
     public Habit(String name){
         this.name = name;
         this.date = Calendar.getInstance();
         this.completions = new ArrayList<Calendar>();
         this.days = new boolean[7];
+        Arrays.fill(this.days,false);
     }
 
     public Habit(String name, Calendar date){
@@ -34,6 +51,7 @@ public class Habit {
         this.date = date;
         this.completions = new ArrayList<Calendar>();
         this.days = new boolean[7];
+        Arrays.fill(this.days,false);
     }
 
 
@@ -44,8 +62,8 @@ public class Habit {
     }
 
     public void setName(String name) throws NameTooLongException{
-        if (name.length() > 25) {
-            this.name = name.substring(0,25);
+        if (name.length() > MAX_LENGTH) {
+            this.name = name.substring(0,MAX_LENGTH);
             throw new NameTooLongException();
         }
         else this.name = name;
@@ -71,8 +89,22 @@ public class Habit {
         return days[i];
     }
 
+    //Return true is no days set
+    public boolean daysNotSet(){
+        for(int i = 0; i < this.days.length; ++i){
+            if(this.days[i] == true){
+                return false;
+            }
+        }
+        return true;
+    }
+
     public String getName(){
         return this.name;
+    }
+
+    public int getMaxLength(){
+        return this.MAX_LENGTH;
     }
 
     public Calendar getDate(){
