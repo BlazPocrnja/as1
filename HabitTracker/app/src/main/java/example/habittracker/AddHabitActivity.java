@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -21,9 +22,13 @@ import java.util.Calendar;
 
 public class AddHabitActivity extends AppCompatActivity {
 
+    //Save file
     private static final String FILENAME = "habitFile.sav";
+
     //Habit Creating
     private Habit habit = new Habit();
+    private Calendar newDate = Calendar.getInstance();
+    private boolean dateSet = false;
 
     //Text fields
     private EditText nameText;
@@ -48,18 +53,32 @@ public class AddHabitActivity extends AppCompatActivity {
         nameText = (EditText)findViewById(R.id.habitName);
 
         //Date field
+        //Source: http://stackoverflow.com/questions/14933330/datepicker-how-to-popup-datepicker-when-click-on-edittext
         dateText = (EditText)findViewById(R.id.habitDate);
         dateText.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                //TO DO
+                new DatePickerDialog(AddHabitActivity.this, myDateListener,
+                        newDate.get(Calendar.YEAR),
+                        newDate.get(Calendar.MONTH),
+                        newDate.get(Calendar.DAY_OF_MONTH)).show();
             }
-                                    }
-        );
-
-
+        });
 
     }
+
+    //Pop up for selecting Habit date
+    //Source://Source: http://www.tutorialspoint.com/android/android_datepicker_control.htm
+    DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker arg0, int year, int month, int day) {
+            newDate.set(Calendar.YEAR, year);
+            newDate.set(Calendar.MONTH, month);
+            newDate.set(Calendar.DAY_OF_MONTH, day);
+            dateText.setText(newDate.get(Calendar.YEAR) + "/" + newDate.get(Calendar.MONTH) + "/" + newDate.get(Calendar.DAY_OF_MONTH));
+            dateSet = true;
+        }
+    };
 
     //When a day box is filled
     public void onCheckBoxClicked(View view) {
@@ -129,10 +148,15 @@ public class AddHabitActivity extends AppCompatActivity {
         }
         else{
             try {
+                //Add the name
                 habit.setName(name);
 
-                Calendar now = Calendar.getInstance();
-                habit.setDate(now);
+                //Add the date
+                if(dateSet){
+                    habit.setDate(newDate);
+                }
+                else habit.setDate(Calendar.getInstance());
+
 
                 //Add habit to list
                 habits.add(habit);

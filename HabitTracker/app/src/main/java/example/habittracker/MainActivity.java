@@ -138,6 +138,8 @@ public class MainActivity extends AppCompatActivity {
                 updateArrays();
                 completedAdapter.notifyDataSetChanged();
                 incompleteAdapter.notifyDataSetChanged();
+                ListUtils.setDynamicHeight(completedView);
+                ListUtils.setDynamicHeight(incompleteView);
                 FileRetriever retriever = new FileRetriever(this);
                 retriever.saveInFile(habits,FILENAME);
                 break;
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             for (Habit i : habits) {
                 //If the habit is for today
                 if (i.getDay(dayOfWeek)) {
-                    //Check if has completions today or not
+                    //Check if has completions today; habits are only completed for a specific day
                     if (i.isComplete()) {
                         for (Calendar d : i.getCompletions()) {
                             if (dateFormat.format(d.getTime()).equals(dateFormat.format(today.getTime()))) {
@@ -200,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
         updateArrays();
         completedAdapter.notifyDataSetChanged();
         incompleteAdapter.notifyDataSetChanged();
+        ListUtils.setDynamicHeight(completedView);
+        ListUtils.setDynamicHeight(incompleteView);
 
     }
 
