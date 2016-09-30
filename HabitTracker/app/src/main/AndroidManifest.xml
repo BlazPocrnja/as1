@@ -23,6 +23,9 @@
         <activity android:name=".AllHabitsActivity"
             android:label="@string/title_all_habits" >
         </activity>
+        <activity android:name=".CompletionsActivity"
+            android:label="@string/title_completions" >
+        </activity>
     </application>
 
 </manifest>

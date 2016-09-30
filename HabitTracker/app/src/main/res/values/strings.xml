@@ -30,6 +30,9 @@
     <string name="popup_string_delete">Delete</string>
     <string name="popup_string_comp">See Completions</string>
 
+    <!-- Completions Activity -->
+    <string name="title_completions">Completions</string>
+
 
 
 </resources>

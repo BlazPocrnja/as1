@@ -5,6 +5,7 @@ package example.habittracker;
  */
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,12 +35,15 @@ public class AllHabitsActivity extends AppCompatActivity {
     //Save File
     private static final String FILENAME = "habitFile.sav";
 
+    //Habit name to pass into next activity
+    public final static String EXTRA_HABIT = "com.example";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_habits);
 
-        //onClick listeners set up for both ListViews
+        //onClick listeners set up for ListView
         habitsView = (ListView) findViewById(R.id.view_all);
         habitsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -55,7 +60,10 @@ public class AllHabitsActivity extends AppCompatActivity {
                         String selected = item.getTitle().toString();
                         //Clicked see completions
                         if(selected.equalsIgnoreCase("See Completions")){
-                            //TODO Completions list
+                            Intent intent = new Intent(AllHabitsActivity.this,CompletionsActivity.class);
+                            //Passes name of habit clicked into completions activity
+                            intent.putExtra(EXTRA_HABIT, parent.getItemAtPosition(position).toString());
+                            startActivity(intent);
                         }
                         //Else you clicked delete
                         else{
@@ -119,6 +127,12 @@ public class AllHabitsActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    //Called when user clicks add button
+    public void addHabit(View view) {
+        Intent intent = new Intent(this, AddHabitActivity.class);
+        startActivity(intent);
     }
 
 }

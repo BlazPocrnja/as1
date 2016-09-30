@@ -111,14 +111,14 @@ public class Habit {
         return this.date;
     }
 
-    //Returns a copy of the list of completion dates
-    //Source: http://stackoverflow.com/questions/7042182/how-to-make-a-deep-copy-of-java-arraylist
+    //Returns the list of completion dates
     public ArrayList<Calendar> getCompletions(){
-        ArrayList<Calendar> tmp = new ArrayList<Calendar>();
-        for(Calendar c : this.completions){
-            tmp.add((Calendar) c.clone());
-        }
-        return tmp;
+        return this.completions;
+    }
+
+    //Returns number of completions
+    public Integer getCount(){
+        return completions.size();
     }
 
     //Checks if habit has been completed at least once
