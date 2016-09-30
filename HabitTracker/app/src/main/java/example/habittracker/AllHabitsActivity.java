@@ -4,6 +4,8 @@ package example.habittracker;
  * Created by pocrn_000 on 9/27/2016.
  */
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
@@ -15,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class AllHabitsActivity extends AppCompatActivity {
 
@@ -39,7 +42,7 @@ public class AllHabitsActivity extends AppCompatActivity {
         habitsView = (ListView) findViewById(R.id.view_all);
         habitsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
                 //Create pop up menu
                 //Source: http://stackoverflow.com/questions/21329132/android-custom-dropdown-popup-menu
                 PopupMenu popup = new PopupMenu(AllHabitsActivity.this,view);
@@ -49,11 +52,16 @@ public class AllHabitsActivity extends AppCompatActivity {
                 //registering popup with OnMenuItemClickListener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(
-                                AllHabitsActivity.this,
-                                "You Clicked : " + item.getTitle(),
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        String selected = item.getTitle().toString();
+                        //Clicked see completions
+                        if(selected.equalsIgnoreCase("See Completions")){
+                            //TODO Completions list
+                        }
+                        //Else you clicked delete
+                        else{
+                            deleteHabitDialog(parent.getItemAtPosition(position).toString());
+                        }
+
                         return true;
                     }
                 });
@@ -76,4 +84,44 @@ public class AllHabitsActivity extends AppCompatActivity {
         habitsAdapter = new ArrayAdapter<Habit>(this, R.layout.list_item, habits);
         habitsView.setAdapter(habitsAdapter);
     }
+
+    private void deleteHabitDialog(final String habit) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure?");
+
+        builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(AllHabitsActivity.this,"Habit Deleted!",Toast.LENGTH_LONG).show();
+                deleteHabit(habit);
+            }
+        });
+
+        builder.setPositiveButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
+    //Delete habit with specified name
+    private void deleteHabit(String name){
+        for (Habit i : habits) {
+            if (i.getName().equals(name)) {
+                habits.remove(i);
+                habitsAdapter.notifyDataSetChanged();
+                FileRetriever retriever = new FileRetriever(this);
+                retriever.saveInFile(habits,FILENAME);
+                break;
+            }
+        }
+    }
+
 }
+
+
+
