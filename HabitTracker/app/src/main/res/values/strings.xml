@@ -26,6 +26,10 @@
     <string name="title_all_habits">All Habits</string>
     <string name="action_all_habits">View All Habits</string>
 
+    <!-- Pop Up Menu -->
+    <string name="popup_string_delete">Delete</string>
+    <string name="popup_string_comp">See Completions</string>
+
 
 
 </resources>

@@ -6,10 +6,13 @@ package example.habittracker;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,12 +37,30 @@ public class AllHabitsActivity extends AppCompatActivity {
 
         //onClick listeners set up for both ListViews
         habitsView = (ListView) findViewById(R.id.view_all);
-        /*habitsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        habitsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO
+                //Create pop up menu
+                //Source: http://stackoverflow.com/questions/21329132/android-custom-dropdown-popup-menu
+                PopupMenu popup = new PopupMenu(AllHabitsActivity.this,view);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(
+                                AllHabitsActivity.this,
+                                "You Clicked : " + item.getTitle(),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
             }
-        });*/
+        });
 
     }
 

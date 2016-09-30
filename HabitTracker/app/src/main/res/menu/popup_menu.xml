@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/popup_completions"
+        android:title="@string/popup_string_comp"/>
+
+    <item
+        android:id="@+id/popup_delete"
+        android:title="@string/popup_string_delete"/>
+
+</menu>
