@@ -1,13 +1,18 @@
 package example.habittracker;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +30,8 @@ public class CompletionsActivity extends AppCompatActivity {
     //Habit information
     private ArrayList<Habit> habits = new ArrayList<Habit>();
     private Habit habit = new Habit();
+    //Location of habit in habits list
+    private int location = 0;
 
     //List of completion dates in string form
     private ArrayList<String> completions = new ArrayList<String>();
@@ -61,7 +68,21 @@ public class CompletionsActivity extends AppCompatActivity {
         completionsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, View view, final int position, long id) {
-                //todo
+                //Create pop up menu
+                //Source: http://stackoverflow.com/questions/21329132/android-custom-dropdown-popup-menu
+                PopupMenu popup = new PopupMenu(CompletionsActivity.this,view);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.popup_menu_delete, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        deleteCompletionDialog(parent.getItemAtPosition(position).toString());
+                        return true;
+                    }
+                });
+
+                popup.show(); //showing popup menu
             }
         });
     }
@@ -80,10 +101,12 @@ public class CompletionsActivity extends AppCompatActivity {
                 habit = i;
                 break;
             }
+            ++location;
         }
 
         //Change the habit's completion dates to strings
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss a                     " +
+                "                     MM/dd/yyyy");
         for(Calendar i: habit.getCompletions()){
             completions.add(dateFormat.format(i.getTime()));
         }
@@ -96,4 +119,47 @@ public class CompletionsActivity extends AppCompatActivity {
         countTextView  = (TextView)findViewById(R.id.text_count);
         countTextView.setText(habit.getCount().toString() + " Completion(s)");
     }
+
+    private void deleteCompletionDialog(final String date) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure?");
+
+        builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(CompletionsActivity.this,"Completion Deleted!",Toast.LENGTH_LONG).show();
+                deleteCompletion(date);
+            }
+        });
+
+        builder.setPositiveButton("No",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+    }
+
+    private void deleteCompletion(String date){
+
+        int index = 0;
+        for(String i: completions){
+            if(date.equals(i)){
+                break;
+            }
+            ++index;
+        }
+
+        habits.get(location).removeCompletion(index);
+        completions.remove(index);
+        completionsAdapter.notifyDataSetChanged();
+        FileRetriever retriever = new FileRetriever(this);
+        retriever.saveInFile(habits,FILENAME);
+    }
+
+
+
 }

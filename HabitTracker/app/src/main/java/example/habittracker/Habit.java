@@ -77,9 +77,9 @@ public class Habit {
         this.completions.add(date);
     }
 
-    //Removes first element with specified date(which are unique to the millisecond)
-    public void removeCompletion(Calendar date){
-        this.completions.remove(date);
+    //Removes first element at index
+    public void removeCompletion(int index){
+        this.completions.remove(index);
     }
 
 

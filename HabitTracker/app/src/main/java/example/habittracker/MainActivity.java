@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     //Source: http://www.tutorialspoint.com/android/android_alert_dialoges.htm
     protected void completedDialog(final String habit) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Completed?");
+        builder.setMessage("Complete?");
 
        builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
             @Override
