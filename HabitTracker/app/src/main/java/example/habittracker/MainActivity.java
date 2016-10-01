@@ -1,5 +1,5 @@
 /*
-HabitTracker
+blaz-HabitTracker- App to create and complete daily tasks.
 
 Copyright (C) 2016 Blaz Pocrnja blaz@ualberta.ca
 This program is free software: you can redistribute it and/or modify

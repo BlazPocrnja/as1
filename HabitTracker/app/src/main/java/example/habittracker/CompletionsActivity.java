@@ -156,6 +156,7 @@ public class CompletionsActivity extends AppCompatActivity {
         habits.get(location).removeCompletion(index);
         completions.remove(index);
         completionsAdapter.notifyDataSetChanged();
+        countTextView.setText(habit.getCount().toString() + " Completion(s)");
         FileRetriever retriever = new FileRetriever(this);
         retriever.saveInFile(habits,FILENAME);
     }
