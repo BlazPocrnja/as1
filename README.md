@@ -23,6 +23,8 @@ Google GSon 2.7
 Android AppCompat v7:23.4.0
 
 ## User Notes
+-Open the "HabitTracker" folder in Android Studio to compile and run.
+
 -Habits are only displayed on the main page if the current day of the week was selected upon habit creation. (i.e If only the Friday checkbox was selected, then the habit is only displayed on Friday according to the phone's date and time.) All existing habits regardless of date will still be accessible through the "All Habits" page.
 
 -Click on any item (habit or completion) in a list to have a drop down menu of options.
