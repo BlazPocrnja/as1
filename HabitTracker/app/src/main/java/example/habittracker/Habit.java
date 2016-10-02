@@ -77,7 +77,7 @@ public class Habit {
         this.completions.add(date);
     }
 
-    //Removes first element at index
+    //Removes element at index
     public void removeCompletion(int index){
         this.completions.remove(index);
     }
