@@ -8,7 +8,7 @@ import java.util.Calendar;
 
 
 /**
- * Created by pocrn_000 on 9/26/2016.
+ * Class that defines the "Habit" object.
  */
 public class Habit {
 

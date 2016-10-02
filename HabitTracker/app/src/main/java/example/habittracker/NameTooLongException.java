@@ -1,7 +1,7 @@
 package example.habittracker;
 
 /**
- * Created by pocrn_000 on 9/27/2016.
+ * Wrapper class for regular Exception; unused.
  */
 public class NameTooLongException extends Exception {
 }

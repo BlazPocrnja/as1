@@ -1,9 +1,5 @@
 package example.habittracker;
 
-/**
- * Created by pocrn_000 on 9/27/2016.
- */
-
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +16,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Can add new Habits by entering data.
+ * "Save" button saves the habit and takes you back to MainActivity.
+ */
 public class AddHabitActivity extends AppCompatActivity {
 
     //Save file

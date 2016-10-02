@@ -19,7 +19,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by pocrn_000 on 9/30/2016.
+ * View all completion times for a given Habit.
+ * Click to delete specific completions times.
  */
 public class CompletionsActivity extends AppCompatActivity {
 

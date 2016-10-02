@@ -34,6 +34,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Main page for app. Shows completed and incomplete habits for the current day.
+ * Can click to complete any habit.
+ * "Add" button takes you to AddHabitActivity.
+ * "See All" button takes you to AllHabitsActivity
+ */
 public class MainActivity extends AppCompatActivity {
 
     //Arrays

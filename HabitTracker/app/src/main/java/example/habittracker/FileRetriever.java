@@ -17,7 +17,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
- * Created by pocrn_000 on 9/28/2016.
+ * Loads and saves data onto a file.
  */
 public class FileRetriever {
 
